@@ -1,4 +1,3 @@
-
 -- Create the database called reddit_posts 
 CREATE DATABASE reddit_posts;
 

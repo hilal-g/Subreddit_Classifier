@@ -36,7 +36,7 @@ titles = []
 
 for i in subreddit_names:
     subreddit_name = i
-    response = requests.get("https://www.reddit.com/r/" + subreddit_name + ".json?limit=10", headers = {'User-agent': 'your bot 0.1'})
+    response = requests.get("https://www.reddit.com/r/" + subreddit_name + ".json?limit=100", headers = {'User-agent': 'your bot 0.1'})
 
     data = response.json()
 
@@ -52,7 +52,15 @@ for i in subreddit_names:
     sub_titles = sub_titles[2:]
     titles.extend(sub_titles)
 
-pprint.pprint(titles)
+sql = "INSERT INTO reddit_dataset (title, subreddit) VALUES (%s, %s)"
 
-print(len(titles))
+mydb = mysql.connector.connect(
+    user=username, 
+    password=password, 
+    db="reddit_posts"
+)
 
+mycursor = mydb.cursor()
+
+mycursor.executemany(sql, titles)
+mydb.commit()
