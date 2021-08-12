@@ -34,8 +34,8 @@ subreddit_names = ["askhistorians",
 
 titles = []
 
-for i in subreddit_names:
-    subreddit_name = i
+for name in subreddit_names:
+    subreddit_name = name
     response = requests.get("https://www.reddit.com/r/" + subreddit_name + ".json?limit=100", headers = {'User-agent': 'your bot 0.1'})
 
     data = response.json()
