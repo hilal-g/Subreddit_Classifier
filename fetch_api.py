@@ -1,6 +1,4 @@
-import json 
-import mysql.connector
-import pprint 
+import mysql.connector 
 import re
 import requests 
 
