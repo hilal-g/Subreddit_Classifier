@@ -7,7 +7,7 @@ from nltk.tokenize.treebank import TreebankWordDetokenizer
 
 # Get the username and password 
 
-with open('../sc_auth.txt') as f:
+with open('../../sc_auth.txt') as f:
     lines = f.readlines()
 
 for i, line in enumerate(lines):
