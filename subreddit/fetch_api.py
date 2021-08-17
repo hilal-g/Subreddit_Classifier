@@ -1,4 +1,6 @@
+import json
 import mysql.connector 
+import pprint
 import re
 import requests 
 
@@ -17,38 +19,44 @@ for i, line in enumerate(lines):
 username = lines[0]
 password = lines[1]
 
-# Extract titles from chosen subreddits 
-
 subreddit_names = ["askhistorians",
-                    "writingprompts",
-                    "television",
-                    "explainlikeimfive",
-                    "lifeprotips",
-                    "relationship_advice",
-                    "science",
-                    "books",
-                    "nba",
-                    "philosophy"]
+                        "writingprompts",
+                        "television",
+                        "explainlikeimfive",
+                        "lifeprotips",
+                        "relationship_advice",
+                        "science",
+                        "books",
+                        "nba",
+                        "philosophy"]
 
 titles = []
 
-for name in subreddit_names:
-    subreddit_name = name
-    response = requests.get("https://www.reddit.com/r/" + subreddit_name + ".json?limit=100", headers = {'User-agent': 'your bot 0.1'})
+# Extract titles from chosen subreddits by calling api
 
-    data = response.json()
+def titles_api(subreddit_names, titles):
 
-    sub_titles = []
+    for name in subreddit_names:
+        subreddit_name = name
+        response = requests.get("https://www.reddit.com/r/" + subreddit_name + ".json?limit=100", headers = {'User-agent': 'your bot 0.1'})
 
-    for i in data['data']['children']:
-        title = TweetTokenizer().tokenize(i['data']['title'])
-        if 'selftext_html' in i['data']:
-            text = i['data']['selftext_html']
-        data = i['data']
-        sub_titles.append((TreebankWordDetokenizer().detokenize(title), subreddit_name))
+        data = response.json()
 
-    sub_titles = sub_titles[2:]
-    titles.extend(sub_titles)
+        sub_titles = []
+
+        for i in data['data']['children']:
+            title = TweetTokenizer().tokenize(i['data']['title'])
+            if 'selftext_html' in i['data']:
+                text = i['data']['selftext_html']
+            data = i['data']
+            sub_titles.append((TreebankWordDetokenizer().detokenize(title), subreddit_name))
+
+        sub_titles = sub_titles[2:]
+        titles.extend(sub_titles)
+
+    return titles
+
+titles = titles_api(subreddit_names, titles)
 
 sql = "INSERT INTO reddit_dataset (title, subreddit) VALUES (%s, %s)"
 
