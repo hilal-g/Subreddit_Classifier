@@ -5,7 +5,13 @@ CREATE DATABASE reddit_posts;
 USE reddit_posts;
 
 -- Create table 
-CREATE TABLE reddit_dataset(id INT AUTO_INCREMENT,
+CREATE TABLE reddit_titles(id INT AUTO_INCREMENT,
                             title MEDIUMTEXT,
                             subreddit VARCHAR(255),
+                            PRIMARY KEY(id));
+
+-- Create table 
+CREATE TABLE reddit_topics(id INT AUTO_INCREMENT,
+                            title MEDIUMTEXT,
+                            topic VARCHAR(255),
                             PRIMARY KEY(id));
