@@ -17,16 +17,14 @@ for i, line in enumerate(lines):
 username = lines[0]
 password = lines[1]
 
-subreddit_names = ["askhistorians",
-                        "writingprompts",
-                        "television",
-                        "explainlikeimfive",
-                        "lifeprotips",
-                        "relationship_advice",
-                        "science",
-                        "books",
-                        "nba",
-                        "philosophy"]
+subreddit_names = {"science": "science", "askscience": "science", "biology": "science",
+                   "physics": "science", "chemistry": "science",
+                   "sports": "sports", "nba": "sports", "soccer": "sports",
+                   "nfl": "sports", "baseball": "sports",
+                   "parenting": "family", "justnomil": "family", "entitledparents": "family",
+                   "insaneparents": "family", "childfree": "family",
+                   "personalfinance": "finance", "CanadianInvestor": "finance", "investing": "finance",
+                   "economics": "finance", "personalfinancecanada": "finance",}
 
 titles = []
 
@@ -54,18 +52,15 @@ def titles_api(subreddit_names, titles):
                 full_text = TreebankWordDetokenizer().detokenize(title + text[:20-len(title)])
             else:
                 full_text = clean_title
-            sub_titles.append((full_text, subreddit_name))
+            sub_titles.append((full_text, subreddit_name, subreddit_names[subreddit_name]))
 
         sub_titles = sub_titles[2:]
         titles.extend(sub_titles)
 
     return titles
 
+sql = "INSERT INTO reddit_topics (title, subreddit, topic) VALUES (%s, %s, %s)"
 titles = titles_api(subreddit_names, titles)
-
-titles_api(subreddit_names, titles)
-
-sql = "INSERT INTO reddit_dataset (title, subreddit) VALUES (%s, %s)"
 
 mydb = mysql.connector.connect(
     user=username, 
@@ -74,6 +69,12 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
+
+mycursor.execute("CREATE TABLE reddit_topics(id INT AUTO_INCREMENT," 
+                    + " title MEDIUMTEXT,"
+                    + " subreddit VARCHAR(255),"
+                    + " topic VARCHAR(255),"
+                    + " PRIMARY KEY(id));")
 
 mycursor.executemany(sql, titles)
 mydb.commit()
