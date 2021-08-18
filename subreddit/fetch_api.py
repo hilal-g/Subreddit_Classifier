@@ -45,11 +45,18 @@ def titles_api(subreddit_names, titles):
         sub_titles = []
 
         for i in data['data']['children']:
-            title = TweetTokenizer().tokenize(i['data']['title'])
-            if 'selftext_html' in i['data']:
-                text = i['data']['selftext_html']
-            data = i['data']
-            sub_titles.append((TreebankWordDetokenizer().detokenize(title), subreddit_name))
+            title = i['data']['title'].lower()
+            title = re.sub("[^a-zA-Z0-9?]", " ", title)
+            title = TweetTokenizer().tokenize(title)
+            clean_title = TreebankWordDetokenizer().detokenize(title)
+            text = i['data']['selftext'].lower()
+            text = re.sub("[^a-zA-Z0-9?]", " ", text)
+            text = TweetTokenizer().tokenize(text)
+            if len(title) < 20:
+                full_text = TreebankWordDetokenizer().detokenize(title + text[:20-len(title)])
+            else:
+                full_text = clean_title
+            sub_titles.append((full_text, subreddit_name))
 
         sub_titles = sub_titles[2:]
         titles.extend(sub_titles)
@@ -57,6 +64,8 @@ def titles_api(subreddit_names, titles):
     return titles
 
 titles = titles_api(subreddit_names, titles)
+
+titles_api(subreddit_names, titles)
 
 sql = "INSERT INTO reddit_dataset (title, subreddit) VALUES (%s, %s)"
 
