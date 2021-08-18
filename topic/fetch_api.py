@@ -70,6 +70,8 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
+# Create table reddit_topics
+
 mycursor.execute("CREATE TABLE reddit_topics(id INT AUTO_INCREMENT," 
                     + " title MEDIUMTEXT,"
                     + " subreddit VARCHAR(255),"

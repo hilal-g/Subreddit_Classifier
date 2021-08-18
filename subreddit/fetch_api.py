@@ -75,5 +75,12 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
+# Create table reddit_titles
+
+mycursor.execute("CREATE TABLE reddit_titles(id INT AUTO_INCREMENT," 
+                    + " title MEDIUMTEXT,"
+                    + " subreddit VARCHAR(255),"
+                    + " PRIMARY KEY(id));")
+
 mycursor.executemany(sql, titles)
 mydb.commit()
