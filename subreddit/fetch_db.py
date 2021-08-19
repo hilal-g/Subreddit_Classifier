@@ -24,6 +24,8 @@ mydb = mysql.connector.connect(
 # Retrieve the reddit data from the database
 
 mycursor = mydb.cursor()
-mycursor.execute("SELECT * FROM reddit_titles;")
+mycursor.execute("SELECT * FROM reddit_subs;")
 
 reddit_data = mycursor.fetchall()
+
+print(len(reddit_data))

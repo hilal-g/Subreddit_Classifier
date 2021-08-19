@@ -63,9 +63,7 @@ def titles_api(subreddit_names, titles):
 
 titles = titles_api(subreddit_names, titles)
 
-titles_api(subreddit_names, titles)
-
-sql = "INSERT INTO reddit_dataset (title, subreddit) VALUES (%s, %s)"
+sql = "INSERT INTO reddit_subs (title, subreddit) VALUES (%s, %s)"
 
 mydb = mysql.connector.connect(
     user=username, 
@@ -75,9 +73,9 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-# Create table reddit_titles
+# Create table reddit_subs
 
-mycursor.execute("CREATE TABLE reddit_titles(id INT AUTO_INCREMENT," 
+mycursor.execute("CREATE TABLE reddit_subs(id INT AUTO_INCREMENT," 
                     + " title MEDIUMTEXT,"
                     + " subreddit VARCHAR(255),"
                     + " PRIMARY KEY(id));")
